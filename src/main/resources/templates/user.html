@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>user</title>
+</head>
+
+<body>
+
+<h3> User page</h3>
+
+<h3>Your name is  [[${username}]] </h3>
+
+
+<br />
+
+<a th:href="@{/admin/view-users}">ViewUsers</a>
+
+<br />
+
+<a href="/logout">Logout</a>
+
+</body>
+</html>
