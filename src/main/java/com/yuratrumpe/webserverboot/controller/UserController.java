@@ -29,11 +29,16 @@ public class UserController {
         this.roleService = roleService;
     }
 
-    @GetMapping(path = {"/", "/admin/view-users"})
-    public ModelAndView viewUsers() {
-
-        return new ModelAndView("view-users", "userList", userService.getAllUsers());
+    @GetMapping(path = {"/login"})
+    public String login(){
+        return "login";
     }
+
+//    @GetMapping(path = {"/admin/view-users"})
+//    public ModelAndView viewUsers() {
+//
+//        return new ModelAndView("view-users", "userList", userService.getAllUsers());
+//    }
 
     @GetMapping(path = {"/admin/edit-user"})
     public String editUser(@RequestParam("id") Long id, Model model) {
@@ -59,16 +64,16 @@ public class UserController {
 
         userService.deleteUser(id);
 
-        return "redirect:/admin/view-users";
+        return "redirect:/admin/admin";
     }
 
-    @GetMapping(path = {"/admin/add-user"})
-    public ModelAndView addUser(ModelMap modelMap) {
-        modelMap.addAttribute("user", new User());
-        modelMap.addAttribute("roleList", roleService.getAllRoles());
-
-        return new ModelAndView("add-user", modelMap);
-    }
+//    @GetMapping(path = {"/admin/add-user"})
+//    public ModelAndView addUser(ModelMap modelMap) {
+//        modelMap.addAttribute("user", new User());
+//        modelMap.addAttribute("roleList", roleService.getAllRoles());
+//
+//        return new ModelAndView("add-user", modelMap);
+//    }
 
     @PostMapping(path = {"/admin/add-user"})
     public String addUser(@ModelAttribute User user, @RequestParam Long role) {
@@ -76,23 +81,30 @@ public class UserController {
         user.setRole(roleService.getRoleById(role));
         userService.addUser(user);
 
-        return "redirect:/admin/view-users";
+        return "redirect:/admin/admin";
     }
 
     @GetMapping(path = {"/user/user"})
-    public ModelAndView user() {
+    public ModelAndView user(ModelMap modelMap) {
 
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return new ModelAndView("user", "username", userDetails.getUsername());
+        User user = userService.getUserByName(userDetails.getUsername());
+
+        modelMap.addAttribute("user", user);
+
+        return new ModelAndView("user", modelMap);
     }
 
     @GetMapping(path = {"/admin/admin"})
-    public ModelAndView admin() {
+    public ModelAndView admin(ModelMap modelMap) {
 
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        modelMap.addAttribute("userList", userService.getAllUsers());
+        modelMap.addAttribute("roleList", roleService.getAllRoles());
+        modelMap.addAttribute("user", new User());
 
-        return new ModelAndView("admin", "username", userDetails.getUsername());
+        return new ModelAndView("admin", modelMap);
     }
 
 }
+

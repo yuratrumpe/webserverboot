@@ -21,8 +21,12 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
+    private final RoleService roleService;
+
     @Autowired
-    private RoleService roleService;
+    public AuthSuccessHandler(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

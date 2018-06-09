@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -25,25 +26,36 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
-    @Autowired
-    private AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
+
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Autowired
-    private AuthenticationSuccessHandler authenticationSuccessHandler;
+    public SecurityConfig(AuthenticationService authenticationService, AuthenticationSuccessHandler authenticationSuccessHandler) {
+        this.authenticationService = authenticationService;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+//        http.csrf().disable();
         http.
                 authorizeRequests()
+                    .antMatchers("/js/**").permitAll()
+                    .antMatchers("/fonts/**").permitAll()
+                    .antMatchers("/css/**").permitAll()
+                    .antMatchers("/webjars/**").permitAll()
                     .antMatchers("/admin/**").hasAnyAuthority("admin")
                     .antMatchers("/user/**").hasAnyAuthority("user", "admin")
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()
+                .loginPage("/login").permitAll()
                 .successHandler(authenticationSuccessHandler)
+                .usernameParameter("username")
+                .passwordParameter("password")
                 .and()
-                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));;
-
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
     }
 
 
