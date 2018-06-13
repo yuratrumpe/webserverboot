@@ -34,29 +34,16 @@ public class UserController {
         return "login";
     }
 
-//    @GetMapping(path = {"/admin/view-users"})
-//    public ModelAndView viewUsers() {
-//
-//        return new ModelAndView("view-users", "userList", userService.getAllUsers());
-//    }
-
-    @GetMapping(path = {"/admin/edit-user"})
-    public String editUser(@RequestParam("id") Long id, Model model) {
-
-        model.addAttribute("user", userService.getUserById(id));
-        model.addAttribute("roleList", roleService.getAllRoles());
-
-        return "edit-user";
-
-    }
-
     @PostMapping(path = {"/admin/edit-user"})
-    public String editUser(@ModelAttribute User user, @RequestParam Long role) {
+    public String editUser(@RequestParam Long id, @RequestParam String username, @RequestParam String password, @RequestParam Long role) {
 
+        User user = userService.getUserById(id);
+        user.setName(username);
+        user.setPassword(password);
         user.setRole(roleService.getRoleById(role));
         userService.updateUser(user);
 
-        return "redirect:/admin/view-users";
+        return "redirect:/admin/admin";
     }
 
     @GetMapping(path = {"/admin/delete-user"})
@@ -66,14 +53,6 @@ public class UserController {
 
         return "redirect:/admin/admin";
     }
-
-//    @GetMapping(path = {"/admin/add-user"})
-//    public ModelAndView addUser(ModelMap modelMap) {
-//        modelMap.addAttribute("user", new User());
-//        modelMap.addAttribute("roleList", roleService.getAllRoles());
-//
-//        return new ModelAndView("add-user", modelMap);
-//    }
 
     @PostMapping(path = {"/admin/add-user"})
     public String addUser(@ModelAttribute User user, @RequestParam Long role) {

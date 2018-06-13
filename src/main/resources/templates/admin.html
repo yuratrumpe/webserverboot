@@ -24,32 +24,6 @@
 <body>
 
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Название модали</h4>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary">Сохранить изменения</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-
-
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -106,14 +80,76 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="user: ${userList}">
+                            <tr th:each="user : ${userList}">
                                 <td th:text="${user.id}">122</td>
                                 <td th:text="${user.name}">Vasya</td>
                                 <td th:text="${user.password}">P@ssw0rd</td>
                                 <td th:text="${user.role.name}">admin</td>
                                 <!--<td><a th:href="@{/admin/edit-user(id=${user.id})}">Edit</a></td>-->
-                                <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Edit</button></td>
+                                <td><button type="button" class="btn btn-info" data-toggle="modal" th:data-target="'#'+${user.id}">Edit</button></td>
                                 <td><a th:href="@{/admin/delete-user(id=${user.id})}" class="btn btn-info">Delete</a></td>
+
+                                <!-- Modal -->
+                                <td>
+                                    <form action="#" th:action="@{/admin/edit-user}" method="post">
+
+                                    <div class="modal fade" th:id="${user.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title" id="myModalLabel">Edit [[${user.role.name}]] [[${user.name}]] [[${user.password}]]</h4>
+                                            </div>
+
+
+                                            <div class="modal-body">
+
+
+
+                                                    <div class="form-group text-center col-lg-4 col-lg-offset-4">
+                                                        <label for="id">ID:</label>
+                                                        <input readonly="readonly" type="text" class="form-control" id="id" value="15" name="id" th:value="${user.id}">
+                                                    </div>
+
+                                                    <div class="form-group text-center col-lg-4 col-lg-offset-4">
+                                                        <label for="username1">Username:</label>
+                                                        <input type="text" class="form-control" id="username1" name="username" value="Vasya" th:value="${user.name}">
+                                                    </div>
+                                                    <div class="form-group text-center col-lg-4 col-lg-offset-4">
+                                                        <label for="password1">Password:</label>
+                                                        <input type="text" class="form-control" id="password1" name="password" value="P@ssw0rd" th:value="${user.password}">
+                                                    </div>
+
+                                                    <div class="form-group text-center col-lg-4 col-lg-offset-4">
+                                                        <label for="role1">Role:</label>
+                                                        <select class="form-control" id="role1" name="role">
+
+                                                            <option th:each="role : ${roleList}"
+                                                                    th:selected="${role.id == user.role.id}"
+                                                                    th:value="${role.id}"
+                                                                    th:text="${role.name}"></option>
+                                                        </select>
+                                                    </div>
+
+                                                    <!--<div class="form-group">-->
+                                                        <!--<input type="text" class="form-control">-->
+                                                    <!--</div>-->
+
+
+
+                                            </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                                                    <button type="submit" class="btn btn-primary">Edit</button>
+                                                </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                    </form>
+
+                                </td>
+
                             </tr>
                             </tbody>
                         </table>
