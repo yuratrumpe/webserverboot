@@ -11,4 +11,10 @@ public interface RoleService {
     Role getRoleByName(String roleName);
 
     Role getRoleById(Long roleId);
+
+    Role addRole(Role role);
+
+    Role updateRole(Role role);
+
+    Role deleteRoleById(Long roleId);
 }

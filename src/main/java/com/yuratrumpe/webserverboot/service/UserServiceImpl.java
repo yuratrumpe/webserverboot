@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Long userId) {
 
-        return userDao.findById(userId).get();
+        return userDao.findById(userId).isPresent() ? userDao.findById(userId).get() : null;
     }
 
     @Override
